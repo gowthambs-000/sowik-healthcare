@@ -20,7 +20,7 @@ import Terms from './pages/Terms';
 import Refund from './pages/Refund';
 import Rentals from './pages/Rentals';
 import AdminRentals from './pages/Admin/AdminRentals';
-import ForgotPassword from './pages/admin/ForgotPassword';
+import ForgotPassword from './pages/Admin/ForgotPassword';
 import Referral from './pages/Referral';
 import JoinUs from './pages/JoinUs';
 import Referrals from './pages/Admin/Referrals';
