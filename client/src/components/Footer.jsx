@@ -75,10 +75,17 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-slate-800 py-5 text-center text-xs text-slate-500 px-4">
-        <p className="mb-1">© {new Date().getFullYear()} Sowik Home Health Care Private Limited. All rights reserved.</p>
-        <p>For medical emergencies, call <strong className="text-slate-300">108 / 112</strong>. In case of a life-threatening emergency, always contact local emergency services first.</p>
-      </div>
+    <div className="border-t border-white/10 py-6 text-center text-sm text-slate-400">
+  <p>© 2026 Sowik Home Health Care Private Limited. All rights reserved.</p>
+  <div className="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-2">
+    <a href="/terms" className="font-semibold text-slate-300 hover:text-white underline">
+      Terms &amp; Conditions
+    </a>
+    <a href="/refund-policy" className="font-semibold text-slate-300 hover:text-white underline">
+      Refund Policy
+    </a>
+  </div>
+</div>
     </footer>
   );
 }

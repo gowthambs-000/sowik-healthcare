@@ -8,6 +8,7 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import bookingRoutes from './routes/bookings.js';
 import publicRoutes from './routes/public.js';
+import referralRoutes from './routes/referrals.js';
 
 dotenv.config();
 connectDB();
@@ -27,6 +28,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api', publicRoutes);
+app.use('/api/referrals', referralRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'OK', service: 'Sowik Home Health Care API' }));
 

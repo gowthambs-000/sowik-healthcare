@@ -16,6 +16,14 @@ import FAQ from './pages/FAQ';
 import Contact from './pages/Contact';
 import Login from './pages/Admin/Login';
 import Dashboard from './pages/Admin/Dashboard';
+import Terms from './pages/Terms';
+import Refund from './pages/Refund';
+import Rentals from './pages/Rentals';
+import AdminRentals from './pages/Admin/AdminRentals';
+import ForgotPassword from './pages/admin/ForgotPassword';
+import Referral from './pages/Referral';
+import JoinUs from './pages/JoinUs';
+import Referrals from './pages/Admin/Referrals';
 
 export default function App() {
   return (
@@ -33,10 +41,18 @@ export default function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/refund-policy" element={<Refund />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/rentals" element={<Rentals />} />
+          <Route path="/admin/rentals" element={<ProtectedRoute><AdminRentals /></ProtectedRoute>} />
+          <Route path="/admin/forgot-password" element={<ForgotPassword />} />
+          <Route path="/referral" element={<Referral />} />
+          <Route path="/join-us" element={<JoinUs />} />
+          <Route path="/admin/referrals" element={<Referrals />} />
         </Routes>
       </main>
       <Footer />

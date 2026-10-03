@@ -1,42 +1,108 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Lock, Mail } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('support@sowik.in');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const submit = async (e) => {
-    e.preventDefault(); setError(''); setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
     try {
-      await login(email, password);
+      // AuthContext saves the token and user under the keys the rest of the app reads
+      await login(email.trim(), password);
       navigate('/admin');
-    } catch (err) { setError('Invalid credentials. Please try again.'); }
-    setLoading(false);
+    } catch (err) {
+      setError(err?.response?.data?.message || err?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="pt-[104px] min-h-screen grid place-items-center bg-gradient-to-br from-primary-50 to-care-50 px-4">
-      <div className="card w-full max-w-md !p-8">
-        <h1 className="text-2xl font-extrabold text-slate-800 text-center">Admin Login</h1>
-        <p className="text-sm text-slate-400 text-center mt-1">Sowik Home Health Care Dashboard</p>
-        <form onSubmit={submit} className="mt-8 space-y-4">
-          <div className="relative">
-            <Mail size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input type="email" required placeholder="Email address" className="input !pl-11" value={email} onChange={e => setEmail(e.target.value)} />
+    <div className="min-h-screen pt-[104px] bg-slate-50 flex items-center justify-center px-4 py-12">
+      <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200/80 shadow-xl">
+        <div className="text-center mb-8">
+          <span className="inline-grid h-14 w-14 place-items-center rounded-2xl bg-primary-50 text-primary-600 mb-3 shadow-sm">
+            <ShieldCheck size={28} />
+          </span>
+          <h1 className="text-2xl font-black text-slate-900">Admin Portal</h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Sign in to manage bookings, services, and equipment rentals
+          </p>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold leading-relaxed">
+            {error}
           </div>
-          <div className="relative">
-            <Lock size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input type="password" required placeholder="Password" className="input !pl-11" value={password} onChange={e => setPassword(e.target.value)} />
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+              Email Address
+            </label>
+            <div className="relative">
+              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="support@sowik.in"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:bg-white focus:border-primary-600 outline-none transition"
+              />
+            </div>
           </div>
-          {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl p-3">{error}</p>}
-          <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-60">{loading ? 'Signing in…' : 'Sign In'}</button>
+
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+              Password
+            </label>
+            <div className="relative">
+              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:bg-white focus:border-primary-600 outline-none transition"
+              />
+            </div>
+            <div className="text-right mt-2">
+              <Link
+                to="/admin/forgot-password"
+                className="text-xs font-semibold text-primary-600 hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          >
+            {loading ? 'Authenticating...' : 'Sign In'} <ArrowRight size={16} />
+          </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <Link to="/" className="text-xs text-slate-400 hover:text-slate-600 transition">
+            ← Return to Homepage
+          </Link>
+        </div>
       </div>
     </div>
   );

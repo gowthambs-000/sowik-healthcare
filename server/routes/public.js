@@ -5,6 +5,7 @@ import Nurse from '../models/Nurse.js';
 import Testimonial from '../models/Testimonial.js';
 import FAQ from '../models/FAQ.js';
 import Contact from '../models/Contact.js';
+import Rental from '../models/Rental.js';
 import { protect, adminOnly } from '../middleware/auth.js';
 import { body, validationResult } from 'express-validator';
 
@@ -30,6 +31,12 @@ router.get('/packages', async (req, res) => {
 router.get('/nurses', async (req, res) => {
   const nurses = await Nurse.find({ isActive: true });
   res.json(nurses);
+});
+
+// Public rentals: only items marked available
+router.get('/rentals', async (req, res) => {
+  const rentals = await Rental.find({ available: { $ne: false } }).sort('category name');
+  res.json(rentals);
 });
 
 router.get('/testimonials', async (req, res) => {
@@ -69,30 +76,61 @@ router.post('/testimonials', [
 });
 
 // ── Admin management endpoints ─────────────────────────────
-router.use(protect, adminOnly);
+// The login guard now covers only /admin/... paths, so /api/health and the
+// public routes above are never blocked.
+router.use('/admin', protect, adminOnly);
 
-const crud = (Model, name) => {
+// Remove fields the database manages itself before saving an edit
+const clean = ({ _id, __v, createdAt, updatedAt, ...rest }) => rest;
+
+/*
+  crud(Model, name, options)
+    canAdd    false -> admins cannot create new items (server answers 403)
+    canDelete false -> admins cannot delete items (server answers 403)
+    sort      how the admin list is ordered
+  Editing (PUT) is always allowed.
+*/
+const crud = (Model, name, { canAdd = true, canDelete = true, sort = '-createdAt' } = {}) => {
   router.get(`/admin/${name}`, async (req, res) => {
-    res.json(await Model.find({}).sort('-createdAt'));
+    res.json(await Model.find({}).sort(sort));
   });
-  router.post(`/admin/${name}`, async (req, res) => {
-    const item = await Model.create(req.body);
-    res.status(201).json(item);
-  });
+
+  if (canAdd) {
+    router.post(`/admin/${name}`, async (req, res) => {
+      const item = await Model.create(clean(req.body));
+      res.status(201).json(item);
+    });
+  } else {
+    router.post(`/admin/${name}`, (req, res) =>
+      res.status(403).json({ message: `Adding ${name} is not allowed` })
+    );
+  }
+
   router.put(`/admin/${name}/:id`, async (req, res) => {
-    const item = await Model.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const item = await Model.findByIdAndUpdate(req.params.id, clean(req.body), { new: true });
     if (!item) return res.status(404).json({ message: 'Not found' });
     res.json(item);
   });
-  router.delete(`/admin/${name}/:id`, async (req, res) => {
-    const item = await Model.findByIdAndDelete(req.params.id);
-    if (!item) return res.status(404).json({ message: 'Not found' });
-    res.json({ message: 'Deleted' });
-  });
+
+  if (canDelete) {
+    router.delete(`/admin/${name}/:id`, async (req, res) => {
+      const item = await Model.findByIdAndDelete(req.params.id);
+      if (!item) return res.status(404).json({ message: 'Not found' });
+      res.json({ message: 'Deleted' });
+    });
+  } else {
+    router.delete(`/admin/${name}/:id`, (req, res) =>
+      res.status(403).json({ message: `Deleting ${name} is not allowed` })
+    );
+  }
 };
 
-crud(Service, 'services');
-crud(Package, 'packages');
+// Edit only: no adding, no deleting
+crud(Service, 'services', { canAdd: false, canDelete: false, sort: 'order' });
+crud(Package, 'packages', { canAdd: false, canDelete: false, sort: 'price' });
+crud(Rental, 'rentals', { canAdd: false, canDelete: false, sort: 'category name' });
+
+// Full control
 crud(Nurse, 'nurses');
 crud(Testimonial, 'testimonials');
 crud(FAQ, 'faqs');
@@ -101,7 +139,7 @@ router.get('/admin/contacts', async (req, res) => {
   res.json(await Contact.find({}).sort('-createdAt'));
 });
 router.put('/admin/contacts/:id', async (req, res) => {
-  const c = await Contact.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  const c = await Contact.findByIdAndUpdate(req.params.id, clean(req.body), { new: true });
   res.json(c);
 });
 router.delete('/admin/contacts/:id', async (req, res) => {
