@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { GraduationCap, Briefcase, Languages, ShieldCheck, Stethoscope } from 'lucide-react';
 import { NURSES } from '../data/siteData';
 import { api } from '../utils/api';
+import TrustBar from '../components/TrustBar';
 
 const initials = (name = '') =>
   name
@@ -50,6 +51,9 @@ export default function Team() {
           </span>
         </div>
       </section>
+
+      {/* Trust strip */}
+      <TrustBar />
 
       {/* Team grid */}
       <section className="max-w-7xl mx-auto px-4 py-16">
