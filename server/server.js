@@ -14,13 +14,23 @@ dotenv.config();
 connectDB();
 
 const app = express();
+app.set('trust proxy', 1);
 
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200 });
+// General limit for the whole API. When it is hit, reply with JSON
+// (not plain text) so the website can show a proper message.
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 500,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => req.path === '/health',
+  message: { message: 'Too many requests. Please wait a few minutes and try again.' }
+});
 app.use('/api/', limiter);
 
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
