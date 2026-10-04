@@ -33,11 +33,14 @@ const GROUPS = [
       ['Newborn Baby & Mother Care', '/services/newborn-baby-mother-care'],
       ['Night Nanny & Infant Care', '/services/night-nanny-infant-care'],
       ['Preterm Infant Care', '/services/preterm-infant-care'],
-      ['Physiotherapy at Home', '/services/physiotherapy']
+      ['Physiotherapy at Home', '/services/physiotherapy'],
+      ['Old Age Home Facility', '/services/old-age-home'],
+      ['Rehabilitation Center Facility', '/services/rehabilitation-center']
     ]
   }
 ];
 
+// linkClass is the same NavLink class function the navbar uses, so Services matches the other links.
 export default function ServicesMegaMenu({ linkClass }) {
   const [open, setOpen] = useState(false);
   const timer = useRef(null);
@@ -64,11 +67,12 @@ export default function ServicesMegaMenu({ linkClass }) {
     >
       <NavLink to="/services" className={linkClass} aria-haspopup="true" aria-expanded={open}>
         <span className="inline-flex items-center gap-1">
-          Services
-          <ChevronDown size={15} className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+        Services
+        <ChevronDown size={15} className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
         </span>
       </NavLink>
 
+      {/* pt-5 acts as an invisible bridge so the menu doesn't close while the mouse travels down */}
       <div
         className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-5 transition-all duration-200 ${
           open ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'

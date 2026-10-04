@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Briefcase, MessageCircle } from 'lucide-react';
 
 // Put the company WhatsApp number here: country code + number, digits only. Example: 919876543210
-const WHATSAPP_NUMBER = '919876543210';
+const WHATSAPP_NUMBER = '918884511711';
 
 const SKILLS = [
   'Patient care', 'Elderly care', 'Feeding assistance', 'Cooking', 'Diaper changing', 'Housekeeping',
@@ -77,8 +77,10 @@ export default function JoinUs() {
     e.preventDefault();
     setError('');
 
-    if (!/^[6-9]\d{9}$/.test(f.mobile.replace(/\D/g, ''))) return setError('Please enter a valid 10-digit mobile number.');
-    if (!f.gender || !f.position || !f.workType) return setError('Please choose gender, position and work type.');
+    if (!/^[6-9]\d{9}$/.test(f.mobile.replace(/\D/g, ''))) return setError('Please enter a valid 10-digit mobile number (Step 1).');
+    if (!f.gender) return setError('Please choose your gender (Step 1).');
+    if (!f.position) return setError('Please choose the position you are applying for (Step 4).');
+    if (!f.workType) return setError('Please choose your preferred work type (Step 4).');
     if (!f.agree) return setError('Please tick the declaration before sending.');
 
     const cur = f.sameAddress
@@ -129,7 +131,10 @@ export default function JoinUs() {
       'I declare the above information is true.'
     ].join('\n');
 
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    const win = window.open(url, '_blank');
+    // If the browser blocked the new window, open WhatsApp in this tab instead.
+    if (!win) window.location.href = url;
   };
 
   return (
@@ -150,8 +155,6 @@ export default function JoinUs() {
 
       <section className="max-w-3xl mx-auto px-4 -mt-8 pb-16 relative">
         <form onSubmit={submit} className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-xl space-y-8">
-          {error && <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">{error}</div>}
-
           <Section title="1. Personal details">
             {text('fullName', 'Full name', { required: true })}
             {text('guardian', "Father's / Mother's / Guardian's name", { required: true })}
@@ -255,7 +258,13 @@ export default function JoinUs() {
             </label>
           </div>
 
-          <button className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+          {error && (
+            <div role="alert" className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold">
+              {error}
+            </div>
+          )}
+
+          <button type="submit" className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
             <MessageCircle size={16} /> Send application on WhatsApp
           </button>
           <p className="text-center text-[11px] text-slate-400">WhatsApp will open with your details filled in. Press Send there to finish.</p>

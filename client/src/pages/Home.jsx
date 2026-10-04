@@ -53,10 +53,114 @@ function Reveal({ children, className = '', delay = 0 }) {
   );
 }
 
+const FALLBACK = {
+  hero: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=1200&q=80',
+  family: 'https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1200&q=80',
+  support: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1600&q=80',
+  bg: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1920&q=70'
+};
+
+// Shows your own photo from the /public folder; if the file is missing, uses the fallback photo.
+function Photo({ src, fallback, alt, className = '' }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      className={className}
+      onError={(e) => {
+        if (e.currentTarget.dataset.fb) return;
+        e.currentTarget.dataset.fb = '1';
+        e.currentTarget.src = fallback;
+      }}
+    />
+  );
+}
+
+const HERO_IMAGES = [
+  { src: '/hero-grandfather.jpg', fb: FALLBACK.hero, alt: 'Nurse caring for an elderly man at home' },
+  { src: '/hero-2.jpg', fb: FALLBACK.family, alt: 'Nurse checking an elderly woman at home' },
+  { src: '/hero-3.jpg', fb: FALLBACK.support, alt: 'Physiotherapist helping an elderly man exercise' }
+];
+
+// Hero photos that fade into each other every 5 seconds
+function HeroSlides() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((v) => (v + 1) % HERO_IMAGES.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="relative h-full w-full">
+      {HERO_IMAGES.map((h, k) => (
+        <Photo
+          key={h.src}
+          src={h.src}
+          fallback={h.fb}
+          alt={h.alt}
+          className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-1000 ${i === k ? 'opacity-100' : 'opacity-0'}`}
+        />
+      ))}
+      <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
+        {HERO_IMAGES.map((h, k) => (
+          <button
+            key={h.src}
+            onClick={() => setI(k)}
+            aria-label={`Show photo ${k + 1}`}
+            className={`h-2 rounded-full transition-all cursor-pointer ${i === k ? 'w-6 bg-white' : 'w-2 bg-white/60'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const U = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1920&q=70`;
+const BG_IMAGES = [
+  { src: '/bg-quality.jpg', fb: U('1586773860418-d37222d8fce3') },
+  { src: '/bg-process.jpg', fb: U('1584515979956-d9f6e5d09982') },
+  { src: '/bg-packages.jpg', fb: U('1516549655169-df83a0774514') },
+  { src: '/bg-team.jpg', fb: U('1576091160550-2173dba999ef') }
+];
+
+// Background photo that changes as you scroll. Sections marked data-bg="0..3" pick the photo.
+function ScrollBackground({ children }) {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(Number(e.target.dataset.bg))),
+      { rootMargin: '-45% 0px -45% 0px' }
+    );
+    document.querySelectorAll('[data-bg]').forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div className="relative mt-12 bg-slate-100">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="sticky top-0 h-screen overflow-hidden">
+          {BG_IMAGES.map((b, i) => (
+            <Photo
+              key={b.src}
+              src={b.src}
+              fallback={b.fb}
+              alt=""
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${active === i ? 'opacity-100' : 'opacity-0'}`}
+            />
+          ))}
+          <div className="absolute inset-0 bg-white/60" />
+        </div>
+      </div>
+      <div className="relative">{children}</div>
+    </div>
+  );
+}
+
 const whyUs = [
   { icon: ShieldCheck, title: '100% Police Verified', text: 'Every nurse is background-checked and police-verified before home deployment.' },
   { icon: Stethoscope, title: 'Qualified GNM / B.Sc', text: 'Hospital-trained registered nurses with ICU, post-op and critical care expertise.' },
-  { icon: Clock, title: '2–12 Hour Deployment', text: 'Rapid caregiver deployment anywhere in Bangalore, 365 days a year.' },
+  { icon: Clock, title: '2–12 Hour Deployment', text: 'Rapid caregiver deployment across India, 365 days a year.' },
   { icon: UserCheck, title: 'Doctor Supervision', text: 'Regular supervisor visits and tele-consultation to keep recovery on track.' }
 ];
 
@@ -107,41 +211,38 @@ export default function Home() {
       `}</style>
 
       {/* Hero */}
-      <section className="relative min-h-[560px] md:min-h-[640px] flex items-center overflow-hidden text-white">
-        <img
-          src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=2000&q=85"
-          alt="Caregiver supporting an older adult at home"
-          className="kb absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-900/80 to-primary-900/50" />
-        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-care-500/30 blur-3xl" />
-        <div className="absolute -top-24 right-0 h-96 w-96 rounded-full bg-primary-500/30 blur-3xl" />
+      <section className="relative overflow-hidden bg-slate-950 text-white">
+        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl" />
+        <div className="absolute -top-24 right-0 h-96 w-96 rounded-full bg-sky-500/20 blur-3xl" />
 
-        <div className="relative max-w-7xl mx-auto px-4 py-16 w-full grid lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-7">
+        <div className="relative max-w-7xl mx-auto px-4 pt-10 pb-24 lg:pt-16 lg:pb-28 grid lg:grid-cols-2 gap-12 items-center">
+          <div>
             <Reveal>
               <div className="inline-flex items-center gap-2.5 rounded-full bg-white/10 px-4 py-2 text-xs font-bold backdrop-blur-md border border-white/20">
                 <span className="ring h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                Nurses available now across Bangalore, 24/7
+                Nurses available now across India, 24/7
               </div>
 
-              <h1 className="mt-6 text-4xl sm:text-5xl xl:text-6xl font-black leading-[1.05] tracking-tight">
-                Hospital-grade care,
-                <span className="block text-care-300">
-                  in the comfort of home.
+              <h1 className="mt-6 text-4xl sm:text-5xl xl:text-6xl font-black leading-[1.1] tracking-tight">
+                <span className="text-sky-300">Hospital-grade</span> <span className="text-white">care,</span>
+                <span className="block">
+                  <span className="text-emerald-300">in the comfort of</span> <span className="text-amber-300">home.</span>
                 </span>
               </h1>
 
               <p className="mt-6 text-lg text-slate-200 max-w-xl leading-relaxed">
-                Sowik Home Health Care sends certified GNM/B.Sc nurses, senior
-                caregivers, baby care specialists and physiotherapists to your
-                door within 2–12 hours.
+                Sowik Home Health Care sends{' '}
+                <span className="font-semibold text-emerald-300">certified GNM/B.Sc nurses</span>,{' '}
+                <span className="font-semibold text-sky-300">senior caregivers</span>,{' '}
+                <span className="font-semibold text-amber-300">baby care specialists</span> and{' '}
+                <span className="font-semibold text-rose-300">physiotherapists</span> to your door within{' '}
+                <span className="font-semibold text-emerald-300">2–12 hours</span>.
               </p>
 
-              <div className="mt-9 flex flex-wrap gap-4">
+              <div className="mt-8 flex flex-wrap gap-4">
                 <button
                   onClick={() => navigate('/book-a-nurse')}
-                  className="group rounded-full bg-care-500 bg-gradient-to-r from-care-500 to-emerald-500 px-8 py-4 font-bold shadow-xl shadow-care-500/30 hover:-translate-y-0.5 hover:shadow-2xl transition-all flex items-center gap-2 cursor-pointer"
+                  className="group rounded-full bg-emerald-500 px-8 py-4 font-bold shadow-xl shadow-emerald-500/30 hover:bg-emerald-400 hover:-translate-y-0.5 transition-all flex items-center gap-2 cursor-pointer"
                 >
                   Book a Nurse
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -154,49 +255,43 @@ export default function Home() {
                 </a>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
+              <div className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
                 {[['1,000+', 'Happy families'], ['100%', 'Verified nurses'], ['2–12h', 'Deployment']].map(([v, l]) => (
-                  <div key={l} className="border-l-2 border-care-400 pl-4">
+                  <div key={l} className="border-l-2 border-emerald-400 pl-4">
                     <p className="text-3xl font-black">{v}</p>
                     <p className="text-xs text-slate-300 font-medium">{l}</p>
                   </div>
                 ))}
               </div>
+
+              <div className="mt-8 flex flex-wrap gap-2">
+                {quick.map(([title, , link]) => (
+                  <Link
+                    key={title}
+                    to={link}
+                    className="rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold hover:bg-white hover:text-slate-900 transition"
+                  >
+                    {title}
+                  </Link>
+                ))}
+              </div>
             </Reveal>
           </div>
 
-          <div className="lg:col-span-5 relative">
+          {/* Clear, un-blurred photo */}
+          <div className="relative">
             <Reveal delay={150}>
-              <div className="floaty bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[2rem] p-6 sm:p-8 shadow-2xl">
-                <div className="flex items-center gap-3 pb-4 border-b border-white/15">
-                  <span className="grid h-11 w-11 place-items-center rounded-2xl bg-emerald-500 text-white shadow-lg">
-                    <HeartPulse size={22} />
-                  </span>
-                  <div>
-                    <h3 className="font-extrabold">Specialised Home Care</h3>
-                    <p className="text-xs text-care-200">Verified staff only</p>
-                  </div>
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-2xl ring-1 ring-white/20">
+                <HeroSlides />
+              </div>
+              <div className="floaty absolute -bottom-6 left-4 sm:left-8 flex items-center gap-3 rounded-2xl bg-white px-5 py-3.5 text-slate-900 shadow-2xl">
+                <span className="grid h-11 w-11 place-items-center rounded-xl bg-emerald-500 text-white">
+                  <ShieldCheck size={22} />
+                </span>
+                <div className="leading-tight">
+                  <p className="font-extrabold text-sm">100% police verified</p>
+                  <p className="text-xs text-slate-500">Nurses and caregivers</p>
                 </div>
-
-                <div className="grid grid-cols-2 gap-3 mt-4">
-                  {quick.map(([title, desc, link]) => (
-                    <Link
-                      key={title}
-                      to={link}
-                      className="group rounded-2xl bg-white/10 border border-white/10 p-3.5 hover:bg-white hover:text-slate-900 transition-all"
-                    >
-                      <p className="font-bold text-sm flex items-center justify-between">
-                        {title}
-                        <ArrowRight size={13} className="opacity-0 group-hover:opacity-100 transition" />
-                      </p>
-                      <p className="text-[11px] opacity-70 mt-1">{desc}</p>
-                    </Link>
-                  ))}
-                </div>
-
-                <Link to="/services" className="mt-5 block text-center text-xs font-bold text-care-200 hover:text-white underline">
-                  View all home healthcare services
-                </Link>
               </div>
             </Reveal>
           </div>
@@ -222,7 +317,7 @@ export default function Home() {
         <Heading
           badge="Our Services"
           title="Complete home healthcare, one call away"
-          text="From daily elderly support and baby care to 24/7 critical nursing, delivered by verified professionals at your Bangalore home."
+          text="From daily elderly support and baby care to 24/7 critical nursing, delivered by verified professionals at your home."
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -256,6 +351,50 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Care that feels like family */}
+      <section className="max-w-7xl mx-auto px-4 pb-14">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <Reveal>
+            <div className="aspect-[4/3] overflow-hidden rounded-[2rem] shadow-xl">
+              <Photo
+                src="/care-family.jpg"
+                fallback={FALLBACK.family}
+                alt="Caregiver helping an older person at home"
+                className="h-full w-full object-cover object-center"
+              />
+            </div>
+          </Reveal>
+          <Reveal delay={100}>
+            <span className="badge">Care that feels like family</span>
+            <h2 className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+              Gentle, dignified care for your loved ones
+            </h2>
+            <p className="mt-4 text-slate-600 leading-relaxed">
+              Our nurses and caregivers look after parents and grandparents with patience, respect and
+              medical skill, so they can recover and live comfortably in their own home.
+            </p>
+            <ul className="mt-6 space-y-3 text-slate-700">
+              {[
+                'Trained nurses for daily care, medication and vitals',
+                'A care plan built around your family’s routine',
+                'Doctor supervision and regular updates for the family'
+              ].map((t) => (
+                <li key={t} className="flex items-start gap-3">
+                  <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-emerald-500" />
+                  {t}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => navigate('/book-a-nurse')}
+              className="mt-8 rounded-full bg-slate-900 px-8 py-3.5 font-bold text-white hover:bg-emerald-600 transition cursor-pointer"
+            >
+              Book a Nurse
+            </button>
+          </Reveal>
+        </div>
+      </section>
+
       {/* Emergency notice */}
       <section className="max-w-5xl mx-auto px-4">
         <Reveal>
@@ -273,8 +412,9 @@ export default function Home() {
         </Reveal>
       </section>
 
+      <ScrollBackground>
       {/* Why us */}
-      <section className="mt-12 py-14 bg-gradient-to-br from-slate-50 to-primary-50/60">
+      <section data-bg="0" className="py-14">
         <div className="max-w-7xl mx-auto px-4">
           <Heading badge="Why Choose Us" title="Unmatched quality standards" />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -294,7 +434,7 @@ export default function Home() {
       </section>
 
       {/* Process */}
-      <section className="max-w-7xl mx-auto px-4 py-14">
+      <section data-bg="1" className="max-w-7xl mx-auto px-4 py-14">
         <Heading badge="Simple Process" title="Care in 4 easy steps" />
         <div className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="hidden lg:block absolute top-7 left-[12%] right-[12%] border-t-2 border-dashed border-primary-200" />
@@ -321,7 +461,7 @@ export default function Home() {
       </section>
 
       {/* Packages */}
-      <section className="relative overflow-hidden bg-slate-950 py-14 text-white">
+      <section data-bg="2" className="relative overflow-hidden bg-slate-950/90 py-14 text-white">
         <div className="absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-primary-600/30 blur-3xl" />
         <div className="absolute -bottom-40 right-1/4 h-96 w-96 rounded-full bg-care-600/30 blur-3xl" />
         <div className="relative max-w-7xl mx-auto px-4">
@@ -335,9 +475,9 @@ export default function Home() {
             {PACKAGES.slice(0, 4).map((p, i) => (
               <Reveal key={p._id} delay={i * 70}>
                 <div className={`h-full rounded-3xl p-7 border transition hover:-translate-y-1 ${
-                  i === 1 ? 'bg-gradient-to-b from-primary-500/30 to-white/5 border-care-400/60 shadow-2xl' : 'bg-white/5 border-white/10 hover:bg-white/10'
+                  p.popular ? 'bg-gradient-to-b from-primary-500/30 to-white/5 border-care-400/60 shadow-2xl' : 'bg-white/5 border-white/10 hover:bg-white/10'
                 }`}>
-                  {i === 1 && <span className="mb-3 inline-block rounded-full bg-care-400 px-3 py-1 text-[11px] font-bold text-slate-900">Most popular</span>}
+                  {p.popular && <span className="mb-3 inline-block rounded-full bg-care-400 px-3 py-1 text-[11px] font-bold text-slate-900">Most popular</span>}
                   <span className="block text-xs font-semibold text-care-200">{p.shift} shift</span>
                   <h3 className="font-bold text-lg mt-1">{p.name}</h3>
                   <p className="mt-4">
@@ -365,7 +505,7 @@ export default function Home() {
       </section>
 
       {/* Team */}
-      <section className="max-w-7xl mx-auto px-4 py-14">
+      <section data-bg="3" className="max-w-7xl mx-auto px-4 py-14">
         <Heading badge="Our Team" title="Meet our verified care professionals" />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {NURSES.slice(0, 3).map((n, i) => (
@@ -387,10 +527,12 @@ export default function Home() {
         </div>
       </section>
 
+      </ScrollBackground>
+
       {/* Testimonials */}
       <section className="py-14 bg-gradient-to-br from-primary-50/70 to-care-50/60">
         <div className="max-w-7xl mx-auto px-4">
-          <Heading badge="Testimonials" title="Trusted by Bangalore families" />
+          <Heading badge="Testimonials" title="Trusted by families across India" />
           <div className="grid md:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t, i) => (
               <Reveal key={t._id} delay={i * 80}>
@@ -446,13 +588,15 @@ export default function Home() {
       {/* Booking callout */}
       <section className="max-w-6xl mx-auto px-4 pb-14">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-primary-700 bg-gradient-to-br from-primary-700 via-primary-600 to-care-500 p-10 sm:p-16 text-center text-white shadow-2xl">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 p-10 sm:p-16 text-center text-white shadow-2xl">
+            <Photo src="/care-support.jpg" fallback={FALLBACK.support} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-slate-900/70" />
             <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-white/10" />
             <div className="absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-white/10" />
             <div className="relative">
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight">Need a nurse today?</h2>
               <p className="mt-4 max-w-lg mx-auto text-white/90">
-                We deploy caregivers within 2–12 hours across Bangalore. Talk to our clinical care coordinator now.
+                We deploy caregivers within 2–12 hours across India. Talk to our clinical care coordinator now.
               </p>
               <div className="mt-9 flex flex-wrap justify-center gap-4">
                 <button

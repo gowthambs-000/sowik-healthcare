@@ -63,12 +63,24 @@ export default function About() {
     <div className="pt-[104px] bg-white">
       {/* Header */}
       <section className="relative overflow-hidden bg-slate-900 text-white">
+        {/* Background photo: put your own file at public/about-bg.jpg */}
+        <img
+          src="/about-bg.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+          onError={(e) => {
+            if (e.currentTarget.dataset.fb) return;
+            e.currentTarget.dataset.fb = '1';
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=1920&q=70';
+          }}
+        />
+        <div className="absolute inset-0 bg-slate-900/70" />
         <div className="absolute -top-24 -right-16 h-80 w-80 rounded-full bg-emerald-500/25 blur-3xl" />
         <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-blue-500/25 blur-3xl" />
         <div className="relative max-w-5xl mx-auto px-4 py-20 md:py-28 text-center">
           <h1 className="text-4xl md:text-6xl font-black tracking-tight">About Sowik Home Health Care</h1>
           <p className="mt-5 text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Caring. Professional. Home. We bridge the gap between hospital care and the comfort of
+            Your Loved Ones, Our Care. We bridge the gap between hospital care and the comfort of
             home, across India.
           </p>
         </div>

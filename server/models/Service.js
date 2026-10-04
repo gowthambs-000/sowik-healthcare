@@ -3,10 +3,14 @@ import mongoose from 'mongoose';
 const serviceSchema = new mongoose.Schema({
   name: { type: String, required: true },
   slug: { type: String, required: true, unique: true },
+  category: { type: String, default: '' },
   shortDescription: { type: String, required: true },
   description: { type: String, required: true },
   inclusions: [{ type: String }],
   duration: { type: String, required: true },
+  image: { type: String, default: '' },
+  price: { type: Number, default: 0 },
+  priceUnit: { type: String, default: '' },
   icon: { type: String, default: 'Heart' },
   order: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true }

@@ -143,6 +143,24 @@ export const SERVICES = [
     shortDescription: 'Certified BPT/MPT physiotherapists providing neuro, orthopedic, cardiopulmonary, and geriatric rehab.',
     inclusions: ['Personalized exercise therapy', 'Post-stroke neurological rehab', 'Post-joint replacement mobility', 'Targeted pain management'],
     duration: '45–60 min sessions'
+  },
+  {
+    name: 'Old Age Home Facility',
+    slug: 'old-age-home',
+    category: 'Rehabilitation & Therapy',
+    shortDescription: 'A safe, comfortable residential home for seniors with round-the-clock care, meals and companionship.',
+    description: 'A caring residential facility for senior citizens who need daily support, with trained staff, nutritious meals, health monitoring and a friendly community.',
+    inclusions: ['24/7 caregiver and nursing support', 'Nutritious meals and hydration', 'Medication and health monitoring', 'Social activities and companionship'],
+    duration: 'Monthly stay'
+  },
+  {
+    name: 'Rehabilitation Center Facility',
+    slug: 'rehabilitation-center',
+    category: 'Rehabilitation & Therapy',
+    shortDescription: 'Supervised rehabilitation with physiotherapy, exercise and nursing care for recovery after surgery, stroke or injury.',
+    description: 'A rehabilitation programme for patients recovering from surgery, stroke or injury, with supervised therapy, nursing care and a personalised recovery plan.',
+    inclusions: ['Physiotherapy sessions', 'Supervised exercise programmes', 'Nursing care and monitoring', 'Personalised recovery plan'],
+    duration: 'Monthly programme'
   }
 ];
 
@@ -155,9 +173,9 @@ export const PACKAGES = [
 ];
 
 export const NURSES = [
-  { _id: 'n1', name: 'Mr. Varun', qualification: 'B.Sc Nursing', specialization: 'Critical Care Nursing Specialist' },
-  { _id: 'n2', name: 'Ms. Sowmya K', qualification: 'M.Sc', specialization: 'Obstetric and Gynecological Specialist' },
-  { _id: 'n3', name: 'Ms. Megha', qualification: 'B.Sc', specialization: 'Paediatric (Child Health) Nursing' },
+   { _id: 'n1', name: 'Mr. Varun', qualification: 'B.Sc Nursing', experience: '5+ years', specialization: 'Critical Care Nursing Specialist', languages: ['Kannada', 'English', 'Hindi'] },
+  { _id: 'n2', name: 'Ms. Sowmya K', qualification: 'M.Sc', experience: '4+ years', specialization: 'Obstetric and Gynecological Specialist', languages: ['Kannada', 'English', 'Telugu'] },
+  { _id: 'n3', name: 'Ms. Megha', qualification: 'B.Sc', experience: '3+ years', specialization: 'Paediatric (Child Health) Nursing', languages: ['Kannada', 'English', 'Tamil'] },
   { _id: 'n4', name: 'Sr. Anitha Ramesh', qualification: 'B.Sc Nursing', experience: '8+ years', specialization: 'ICU & Post-Surgery Care', languages: ['Kannada', 'English', 'Hindi'] },
   { _id: 'n5', name: 'Sr. Priya Shetty', qualification: 'GNM', experience: '6+ years', specialization: 'Elderly & Bedridden Care', languages: ['Kannada', 'Tulu', 'Hindi'] },
   { _id: 'n6', name: 'Sr. Kavitha Nair', qualification: 'B.Sc Nursing', experience: '10+ years', specialization: 'Wound Care & Palliative', languages: ['Malayalam', 'English', 'Kannada'] },

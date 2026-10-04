@@ -10,20 +10,22 @@ const U = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&
 // Replace any image with your own URL if you prefer a different photo.
 const SERVICE_IMAGES = {
   'newborn-baby-mother-care': U('1555252333-9f8e92e65df9'),
-  'night-nanny-infant-care': U('1519689680058-324335c77eba'),
+  'night-nanny-infant-care': '/services/night-nanny.jpg',
   'preterm-infant-care': U('1544126592-807ade215a0b'),
   'elderly-care': U('1576765608535-5f04d1e3f289'),
   'bedridden-care': U('1584515979956-d9f6e5d09982'),
-  'dementia-alzheimers-care': U('1576765608535-5f04d1e3f289'),
+  'dementia-alzheimers-care': '/services/dementia-care.jpg',
   'attendant-caregiver': U('1584515933487-779824d29309'),
   '24-7-nursing': U('1584516150909-c43483ee7932'),
-  'wound-care': U('1629909613654-28e377c37b09'),
+  'wound-care': '/services/wound-care.jpg',
   'medication-assistance': U('1631815589968-fdb09a223b1e'),
   'vital-monitoring': U('1505751172876-fa1923c5c528'),
   'post-surgery': U('1551076805-e1869033e561'),
   'post-hospitalization': U('1586773860418-d37222d8fce3'),
   'palliative-care': U('1516549655169-df83a0774514'),
-  physiotherapy: U('1576091160550-2173dba999ef')
+  physiotherapy: '/services/physiotherapy.jpg',
+  'old-age-home': '/services/old-age-home.jpg',
+  'rehabilitation-center': '/services/rehabilitation-center.jpg'
 };
 
 const CATEGORY_FALLBACK = {
@@ -31,7 +33,7 @@ const CATEGORY_FALLBACK = {
   'Elderly Care': SERVICE_IMAGES['elderly-care'],
   'Nursing Services': SERVICE_IMAGES['24-7-nursing'],
   'Post-Operative Care': SERVICE_IMAGES['post-surgery'],
-  'Rehabilitation & Therapy': SERVICE_IMAGES.physiotherapy
+  'Rehabilitation & Therapy': U('1576091160550-2173dba999ef')
 };
 
 const CATEGORY_MAP = {
@@ -46,6 +48,8 @@ const CATEGORY_MAP = {
   'post-hospitalization': 'Post-Operative Care',
   'palliative-care': 'Post-Operative Care',
   physiotherapy: 'Rehabilitation & Therapy',
+  'old-age-home': 'Rehabilitation & Therapy',
+  'rehabilitation-center': 'Rehabilitation & Therapy',
   '24-7-nursing': 'Nursing Services',
   'wound-care': 'Nursing Services',
   'medication-assistance': 'Nursing Services',
@@ -61,7 +65,8 @@ const prepare = (s) => {
     ...s,
     category,
     shortDescription: s.shortDescription || s.description,
-    displayImage: s.image || SERVICE_IMAGES[s.slug] || CATEGORY_FALLBACK[category] || SERVICE_IMAGES['24-7-nursing']
+    // Local photo for the slug wins, then an admin-set image, then the category fallback.
+    displayImage: SERVICE_IMAGES[s.slug] || s.image || CATEGORY_FALLBACK[category] || SERVICE_IMAGES['24-7-nursing']
   };
 };
 
@@ -98,30 +103,41 @@ export default function Services() {
   );
 
   return (
-    <div className="pt-[104px] bg-slate-50 min-h-screen">
-      {/* Header */}
+    <div className="pt-[90px] bg-slate-50 min-h-screen">
+      {/* Header with photo */}
       <section className="relative overflow-hidden bg-slate-900 text-white">
         <div className="absolute -top-24 -right-16 h-80 w-80 rounded-full bg-emerald-500/25 blur-3xl" />
         <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-blue-500/25 blur-3xl" />
-        <div className="relative max-w-5xl mx-auto px-4 py-16 md:py-24 text-center">
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight">Our Healthcare Services</h1>
-          <p className="mt-5 text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            {services.length}+ specialised home healthcare services, delivered by verified professionals across India.
-          </p>
-          <label className="relative mt-8 mx-auto block max-w-md">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search services, e.g. wound care"
-              className="w-full rounded-full bg-white py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none ring-2 ring-transparent focus:ring-emerald-400"
+        <div className="relative max-w-7xl mx-auto px-4 py-12 md:py-16 grid lg:grid-cols-2 gap-10 items-center">
+          <div className="text-center lg:text-left">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight">Our Healthcare Services</h1>
+            <p className="mt-5 text-lg text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+              {services.length}+ specialised home healthcare services, delivered by verified professionals across India.
+            </p>
+            <label className="relative mt-8 mx-auto lg:mx-0 block max-w-md">
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search services, e.g. wound care"
+                className="w-full rounded-full bg-white py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none ring-2 ring-transparent focus:ring-emerald-400"
+              />
+            </label>
+          </div>
+          <div className="relative hidden lg:block">
+            <img
+              src="/services/services-hero.jpg"
+              alt="Caregiver gently caring for a baby at home"
+              onError={(e) => { e.currentTarget.parentElement.style.display = 'none'; }}
+              className="h-[340px] w-full rounded-[2rem] object-cover shadow-2xl ring-1 ring-white/10"
             />
-          </label>
+          </div>
         </div>
       </section>
 
-      {/* Category filter */}
-      <div className="sticky top-[104px] z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
+      {/* Category filter.
+          top-[90px] = height of the banner + navbar. If a gap or overlap shows, change 90 to match. */}
+      <div className="sticky top-[90px] z-20 border-b border-slate-200 bg-white backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto md:flex-wrap md:justify-center">
           {SERVICE_CATEGORIES.map((cat) => {
             const on = selectedCategory === cat;
@@ -158,6 +174,11 @@ export default function Services() {
                   src={s.displayImage}
                   alt={`${s.name} home healthcare service`}
                   loading="lazy"
+                  onError={(e) => {
+                    if (e.currentTarget.dataset.fb) return;
+                    e.currentTarget.dataset.fb = '1';
+                    e.currentTarget.src = CATEGORY_FALLBACK[s.category] || CATEGORY_FALLBACK['Nursing Services'];
+                  }}
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
@@ -190,11 +211,11 @@ export default function Services() {
                   </ul>
                 )}
 
-                <div className="mt-auto flex items-center justify-between gap-3 pt-6">
+                <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-6">
                   {s.slug ? (
                     <Link
                       to={`/services/${s.slug}`}
-                      className="inline-flex items-center gap-1 text-sm font-bold text-emerald-700 hover:underline"
+                      className="inline-flex items-center gap-1 whitespace-nowrap text-sm font-bold text-emerald-700 hover:underline"
                     >
                       View details <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
                     </Link>

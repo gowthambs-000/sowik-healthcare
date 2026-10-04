@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LogOut, Trash2, Plus, Pencil, X, Lock, RefreshCw, Search, LayoutDashboard, CalendarCheck,
-  Stethoscope, Package, BedDouble, Users, Star, HelpCircle, Mail, Gift
+  Stethoscope, Package, BedDouble, Users, Star, HelpCircle, Mail
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { SERVICE_CATEGORIES, SERVICES, PACKAGES, NURSES, FAQS, TESTIMONIALS } from '../../data/siteData';
@@ -42,13 +42,15 @@ const TABS = {
   Services: {
     key: 'services', icon: Stethoscope, singular: 'Service', read: '/admin/services', write: '/admin/services',
     title: (i) => i.name,
-    detail: (i) => [i.category, i.duration, i.shortDescription].filter(Boolean).join(' · ') || '—',
+    detail: (i) => [i.category, i.duration, i.price ? `${money(i.price)} onwards / ${i.priceUnit || 'month'}` : '', i.shortDescription].filter(Boolean).join(' · ') || '—',
     fields: [
       { k: 'name', label: 'Name' },
       { k: 'category', label: 'Category', type: 'select', options: SERVICE_CATEGORIES.filter((c) => c !== 'All') },
       { k: 'shortDescription', label: 'Short description' },
       { k: 'description', label: 'Description', type: 'textarea' },
       { k: 'duration', label: 'Duration' },
+      { k: 'price', label: 'Starting price in ₹ (optional, shows "onwards")', type: 'number' },
+      { k: 'priceUnit', label: 'Price unit (e.g. month)' },
       { k: 'image', label: 'Image URL (optional)' },
       { k: 'inclusions', label: "What's included (one per line)", type: 'list', sep: '\n' },
       { k: 'order', label: 'Display order', type: 'number' }
@@ -119,17 +121,6 @@ const TABS = {
     title: (i) => i.name,
     detail: (i) => [i.phone, i.subject, i.message].filter(Boolean).join(' · ') || '—',
     fields: []
-  },
-  Referrals: {
-    key: 'referrals', icon: Gift, singular: 'Referral', read: '/admin/referrals', write: '/admin/referrals',
-    noAdd: true, // referrals come from the public form, so the admin only edits the status or deletes
-    title: (i) => i.patientName,
-    detail: (i) =>
-      [i.status, i.patientPhone, i.service, i.location, `Referred by ${i.referrerName} (${i.referrerPhone})`]
-        .filter(Boolean).join(' · '),
-    fields: [
-      { k: 'status', label: 'Status', type: 'select', options: ['New', 'Contacted', 'Converted', 'Closed'] }
-    ]
   }
 };
 
@@ -139,7 +130,7 @@ const inputCls = 'w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2
 
 const emptyData = {
   bookings: [], services: [], packages: [], rentals: [],
-  nurses: [], testimonials: [], faqs: [], contacts: [], referrals: []
+  nurses: [], testimonials: [], faqs: [], contacts: []
 };
 
 const initialsOf = (name = '') =>
@@ -211,8 +202,7 @@ export default function Dashboard() {
     ['Team members', data.nurses.length, Users, 'from-slate-700 to-slate-900'],
     ['Testimonials', data.testimonials.length, Star, 'from-slate-700 to-slate-900'],
     ['FAQs', data.faqs.length, HelpCircle, 'from-slate-700 to-slate-900'],
-    ['Contact enquiries', data.contacts.length, Mail, 'from-slate-700 to-slate-900'],
-    ['Referrals', data.referrals.length, Gift, 'from-slate-700 to-slate-900']
+    ['Contact enquiries', data.contacts.length, Mail, 'from-slate-700 to-slate-900']
   ];
 
   /* ---------- actions ---------- */
@@ -319,7 +309,7 @@ export default function Dashboard() {
   };
 
   const cfg = TABS[tab];
-  const canAdd = cfg && cfg.write && !LOCKED.includes(cfg.key) && !cfg.noAdd;
+  const canAdd = cfg && cfg.write && !LOCKED.includes(cfg.key);
   const canDelete = cfg && !LOCKED.includes(cfg.key);
   const canEdit = cfg && cfg.write && cfg.fields.length > 0;
   const q = query.trim().toLowerCase();

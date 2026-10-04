@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   CheckCircle2, Upload, Copy, User, Phone, MapPin, Stethoscope, CalendarDays,
@@ -75,6 +75,26 @@ export default function BookNurse() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [apiServices, setApiServices] = useState([]);
+
+  // Load services from the database so anything added in Admin shows up here too.
+  useEffect(() => {
+    api
+      .get('/services')
+      .then((data) => {
+        if (Array.isArray(data)) setApiServices(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Local list first, then any extra services that exist only in the database.
+  const serviceNames = useMemo(() => {
+    const names = SERVICES.map((s) => s.name);
+    apiServices.forEach((s) => {
+      if (s?.name && !names.includes(s.name)) names.push(s.name);
+    });
+    return names;
+  }, [apiServices]);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const pick = (k) => (v) => setForm((f) => ({ ...f, [k]: v }));
@@ -194,7 +214,7 @@ export default function BookNurse() {
               <Field label="Service required *" className="sm:col-span-2">
                 <select required className={inp} value={form.service} onChange={set('service')}>
                   <option value="">Select a service…</option>
-                  {SERVICES.map((s) => <option key={s.slug}>{s.name}</option>)}
+                  {serviceNames.map((name) => <option key={name} value={name}>{name}</option>)}
                   <option>Other / Not sure</option>
                 </select>
               </Field>
