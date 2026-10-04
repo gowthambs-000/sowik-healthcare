@@ -57,7 +57,7 @@ const FALLBACK = {
   hero: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=1200&q=80',
   family: 'https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1200&q=80',
   support: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1600&q=80',
-  bg: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1920&q=70'
+  bg: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1920&q=80'
 };
 
 // Shows your own photo from the /public folder; if the file is missing, uses the fallback photo.
@@ -223,19 +223,20 @@ export default function Home() {
                 Nurses available now across India, 24/7
               </div>
 
+              {/* Heading: white first line, soft cream-to-mint gradient on the second line */}
               <h1 className="mt-6 text-4xl sm:text-5xl xl:text-6xl font-black leading-[1.1] tracking-tight">
-                <span className="text-sky-300">Hospital-grade</span> <span className="text-white">care,</span>
-                <span className="block">
-                  <span className="text-emerald-300">in the comfort of</span> <span className="text-amber-300">home.</span>
+                <span className="block text-white">Hospital-grade care,</span>
+                <span className="block bg-gradient-to-r from-emerald-50 via-emerald-200 to-teal-200 bg-clip-text text-transparent">
+                  in the comfort of home.
                 </span>
               </h1>
 
               <p className="mt-6 text-lg text-slate-200 max-w-xl leading-relaxed">
                 Sowik Home Health Care sends{' '}
                 <span className="font-semibold text-emerald-300">certified GNM/B.Sc nurses</span>,{' '}
-                <span className="font-semibold text-sky-300">senior caregivers</span>,{' '}
-                <span className="font-semibold text-amber-300">baby care specialists</span> and{' '}
-                <span className="font-semibold text-rose-300">physiotherapists</span> to your door within{' '}
+                <span className="font-semibold text-white">senior caregivers</span>,{' '}
+                <span className="font-semibold text-emerald-300">baby care specialists</span> and{' '}
+                <span className="font-semibold text-white">physiotherapists</span> to your door within{' '}
                 <span className="font-semibold text-emerald-300">2–12 hours</span>.
               </p>
 
@@ -433,19 +434,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Process */}
+      {/* Process: each step sits in a white box so the text is easy to read over the photo */}
       <section data-bg="1" className="max-w-7xl mx-auto px-4 py-14">
         <Heading badge="Simple Process" title="Care in 4 easy steps" />
-        <div className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="hidden lg:block absolute top-7 left-[12%] right-[12%] border-t-2 border-dashed border-primary-200" />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map(([title, text], i) => (
             <Reveal key={title} delay={i * 80}>
-              <div className="relative text-center">
-                <span className="relative mx-auto grid h-14 w-14 place-items-center rounded-full bg-primary-600 bg-gradient-to-br from-primary-600 to-care-500 text-lg font-black text-white shadow-lg ring-8 ring-white">
+              <div className="h-full rounded-3xl bg-white p-7 text-center shadow-lg border border-slate-100 hover:-translate-y-1 hover:shadow-2xl transition">
+                <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-primary-600 bg-gradient-to-br from-primary-600 to-care-500 text-lg font-black text-white shadow-lg ring-8 ring-primary-50">
                   {i + 1}
                 </span>
                 <h3 className="mt-5 font-extrabold text-slate-900">{title}</h3>
-                <p className="mt-2 text-sm text-slate-500 leading-relaxed">{text}</p>
+                <p className="mt-2 text-sm text-slate-600 leading-relaxed">{text}</p>
               </div>
             </Reveal>
           ))}
