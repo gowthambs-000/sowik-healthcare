@@ -13,18 +13,19 @@ const mainLinks = [
   { to: '/rentals', label: 'Rentals' },
   { to: '/packages', label: 'Packages' },
   { to: '/team', label: 'Our Team' },
+  { to: '/referral', label: 'Referral' },
+  { to: '/join-us', label: 'Join Us' },
   { to: '/contact', label: 'Contact' }
 ];
 
 // Tucked into the "More" dropdown
 const moreLinks = [
   { to: '/testimonials', label: 'Testimonials' },
-  { to: '/faq', label: 'FAQ' },
-  { to: '/referral', label: 'Referral Program' },
-  { to: '/join-us', label: 'Join Us' }
+  { to: '/faq', label: 'FAQ' }
 ];
 
-const mobileLinks = [...mainLinks.slice(0, 6), ...moreLinks, mainLinks[6]];
+// Mobile menu: all pages, with Contact last
+const mobileLinks = [...mainLinks.filter((l) => l.to !== '/contact'), ...moreLinks, { to: '/contact', label: 'Contact' }];
 
 function MoreMenu({ linkClass }) {
   const [open, setOpen] = useState(false);
@@ -78,7 +79,7 @@ export default function Navbar() {
         🚨 Medical emergency? Call <strong>108 / 112</strong> immediately. We are a home-care service, not an emergency responder.
       </div>
 
-      <nav className="max-w-7xl mx-auto flex items-center gap-8 px-4 py-2.5">
+      <nav className="max-w-[1440px] mx-auto flex items-center gap-6 px-4 py-2.5">
         {/* Brand: pinned to the left */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0 mr-auto xl:mr-0">
           <img
@@ -95,8 +96,8 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Pages (wide screens only) */}
-        <div className="hidden xl:flex flex-1 items-center justify-center gap-6">
+        {/* Pages (wide screens only). Tighter spacing on 1280px screens, roomier on bigger ones. */}
+        <div className="hidden xl:flex flex-1 items-center justify-center gap-4 2xl:gap-6">
           {mainLinks.map((l) =>
             l.to === '/services' ? (
               <ServicesMegaMenu key={l.to} linkClass={navCls} />
@@ -112,9 +113,9 @@ export default function Navbar() {
 
         {/* Call + book */}
         <div className="hidden md:flex items-center gap-4 shrink-0">
-          <a href={PHONE_TEL} className="flex items-center gap-1.5 text-sm font-bold text-slate-700 hover:text-primary-600 whitespace-nowrap">
+          <a href={PHONE_TEL} aria-label={`Call ${PHONE}`} className="flex items-center gap-1.5 text-sm font-bold text-slate-700 hover:text-primary-600 whitespace-nowrap">
             <Phone size={15} className="text-care-600 shrink-0" />
-            {PHONE}
+            <span className="xl:hidden 2xl:inline">{PHONE}</span>
           </a>
           <button onClick={() => navigate('/book-a-nurse')} className="btn-primary !py-2 !px-4 !text-xs whitespace-nowrap">
             Book a Nurse

@@ -1,11 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Gift, User, Phone, Mail, MapPin, HeartPulse, MessageSquare, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { SERVICES } from '../data/siteData';
 import { api } from '../utils/api';
-
-const SERVICES = [
-  'Elderly Care', 'Post-Surgery Recovery', '24/7 Nursing Care', 'Baby & Mother Care',
-  'Dementia Care', 'Physiotherapy at Home', 'Equipment Rental', 'Not sure'
-];
 
 const inputCls =
   'w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:bg-white focus:border-primary-600 outline-none transition';
@@ -33,6 +29,26 @@ export default function Referral() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState('');
+  const [apiServices, setApiServices] = useState([]);
+
+  // Also load services from the database, so anything added in Admin shows up here.
+  useEffect(() => {
+    api
+      .get('/services')
+      .then((data) => {
+        if (Array.isArray(data)) setApiServices(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  // All services from the website data, plus any extra ones that exist only in the database.
+  const serviceOptions = useMemo(() => {
+    const names = SERVICES.map((s) => s.name);
+    apiServices.forEach((s) => {
+      if (s?.name && !names.includes(s.name)) names.push(s.name);
+    });
+    return [...names, 'Equipment Rental', 'Not sure'];
+  }, [apiServices]);
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
@@ -116,7 +132,7 @@ export default function Referral() {
                   <Field label="Service needed" icon={HeartPulse}>
                     <select className={inputCls} value={form.service} onChange={set('service')}>
                       <option value="">Select a service</option>
-                      {SERVICES.map((s) => <option key={s}>{s}</option>)}
+                      {serviceOptions.map((s) => <option key={s} value={s}>{s}</option>)}
                     </select>
                   </Field>
                   <div className="md:col-span-2">

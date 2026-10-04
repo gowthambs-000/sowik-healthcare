@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LogOut, Trash2, Plus, Pencil, X, Lock, RefreshCw, Search, LayoutDashboard, CalendarCheck,
-  Stethoscope, Package, BedDouble, Users, Star, HelpCircle, Mail
+  Stethoscope, Package, BedDouble, Users, Star, HelpCircle, Mail, Gift
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { SERVICE_CATEGORIES, SERVICES, PACKAGES, NURSES, FAQS, TESTIMONIALS } from '../../data/siteData';
@@ -129,7 +129,7 @@ const TAB_NAMES = ['Overview', 'Bookings', ...Object.keys(TABS)];
 const inputCls = 'w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100';
 
 const emptyData = {
-  bookings: [], services: [], packages: [], rentals: [],
+  bookings: [], referrals: [], services: [], packages: [], rentals: [],
   nurses: [], testimonials: [], faqs: [], contacts: []
 };
 
@@ -151,7 +151,11 @@ export default function Dashboard() {
 
   /* ---------- live data ---------- */
   const load = useCallback(async () => {
-    const jobs = [['bookings', '/bookings'], ...Object.values(TABS).map((c) => [c.key, c.read])];
+    const jobs = [
+      ['bookings', '/bookings'],
+      ['referrals', '/referrals'],
+      ...Object.values(TABS).map((c) => [c.key, c.read])
+    ];
     const results = await Promise.allSettled(jobs.map(([, path]) => api.get(path, true)));
     setData((prev) => {
       const next = { ...prev };
@@ -202,7 +206,8 @@ export default function Dashboard() {
     ['Team members', data.nurses.length, Users, 'from-slate-700 to-slate-900'],
     ['Testimonials', data.testimonials.length, Star, 'from-slate-700 to-slate-900'],
     ['FAQs', data.faqs.length, HelpCircle, 'from-slate-700 to-slate-900'],
-    ['Contact enquiries', data.contacts.length, Mail, 'from-slate-700 to-slate-900']
+    ['Contact enquiries', data.contacts.length, Mail, 'from-slate-700 to-slate-900'],
+    ['Referrals', data.referrals.length, Gift, 'from-slate-700 to-slate-900']
   ];
 
   /* ---------- actions ---------- */
@@ -377,6 +382,14 @@ export default function Dashboard() {
               </button>
             );
           })}
+          {/* Referrals open on their own page */}
+          <button
+            onClick={() => navigate('/admin/referrals')}
+            className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-[13px] font-semibold text-slate-600 transition hover:bg-slate-100 cursor-pointer"
+          >
+            <Gift size={14} /> Referrals
+            <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[11px] text-slate-500">{data.referrals.length}</span>
+          </button>
         </div>
 
         {/* Overview */}
