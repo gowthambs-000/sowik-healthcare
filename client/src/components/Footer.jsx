@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Instagram, Facebook } from 'lucide-react';
 import { PHONE, PHONE_TEL, EMAIL, ADDRESS, WHATSAPP } from '../data/siteData';
+
+const INSTAGRAM = 'https://www.instagram.com/sowik_home_health_care';
+const FACEBOOK = 'https://www.facebook.com/profile.php?id=61594714877949';
 
 const quickLinks = [
   ['Home', '/'],
@@ -44,6 +47,26 @@ export default function Footer() {
           <p className="text-sm text-slate-400 leading-relaxed">
             Sowik Home Health Care Private Limited — bringing verified nurses, caregivers and physiotherapists to your doorstep, anywhere in India.
           </p>
+          <div className="mt-5 flex items-center gap-3">
+            <a
+              href={INSTAGRAM}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Sowik Home Health Care on Instagram"
+              className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white transition hover:bg-pink-500"
+            >
+              <Instagram size={18} />
+            </a>
+            <a
+              href={FACEBOOK}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Sowik Home Health Care on Facebook"
+              className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white transition hover:bg-blue-600"
+            >
+              <Facebook size={18} />
+            </a>
+          </div>
         </div>
 
         {/* Quick links */}

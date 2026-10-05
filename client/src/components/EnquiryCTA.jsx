@@ -8,7 +8,7 @@ export default function EnquiryCTA({ serviceName }) {
   return (
     <div className="flex flex-wrap gap-3 mt-5">
       <button onClick={() => navigate('/book-a-nurse', { state: { service: serviceName } })} className="btn-primary !text-xs">Enquire / Book Now</button>
-      <a href={`https://wa.me/917022755362?text=${msg}`} target="_blank" rel="noreferrer" className="btn-whatsapp !text-xs">WhatsApp Enquiry</a>
+      <a href={`https://wa.me/918884511711?text=${msg}`} target="_blank" rel="noreferrer" className="btn-whatsapp !text-xs">WhatsApp Enquiry</a>
       <a href={PHONE_TEL} className="btn-outline !text-xs"><Phone size={14} /> {PHONE}</a>
     </div>
   );

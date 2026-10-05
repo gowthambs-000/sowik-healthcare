@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import {
   ShieldCheck, Clock, Stethoscope, UserCheck, Phone, MessageCircle,
-  ArrowRight, CheckCircle2, Star, AlertTriangle, HeartPulse, Quote
+  ArrowRight, CheckCircle2, Star, AlertTriangle, HeartPulse, Quote, Instagram, Facebook
 } from 'lucide-react';
 import {
   SERVICES, PACKAGES, NURSES, TESTIMONIALS, FAQS, PHONE, PHONE_TEL, WHATSAPP
@@ -53,11 +53,14 @@ function Reveal({ children, className = '', delay = 0 }) {
   );
 }
 
+const INSTAGRAM = 'https://www.instagram.com/sowik_home_health_care';
+const FACEBOOK = 'https://www.facebook.com/profile.php?id=61594714877949';
+
 const FALLBACK = {
   hero: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=1200&q=80',
   family: 'https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1200&q=80',
   support: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1600&q=80',
-  bg: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1920&q=80'
+  bg: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1920&q=70'
 };
 
 // Shows your own photo from the /public folder; if the file is missing, uses the fallback photo.
@@ -211,27 +214,27 @@ export default function Home() {
       `}</style>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl" />
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 text-white">
         <div className="absolute -top-24 right-0 h-96 w-96 rounded-full bg-sky-500/20 blur-3xl" />
+        <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl" />
 
-        <div className="relative max-w-7xl mx-auto px-4 pt-10 pb-24 lg:pt-16 lg:pb-28 grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <Reveal>
-              <div className="inline-flex items-center gap-2.5 rounded-full bg-white/10 px-4 py-2 text-xs font-bold backdrop-blur-md border border-white/20">
+        <div className="relative max-w-7xl mx-auto px-4 pt-10 pb-24">
+          {/* Text on the left, full wide photo on the right */}
+          <div className="grid items-center gap-10 lg:grid-cols-12">
+            <Reveal className="lg:col-span-6">
+              <div className="inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold backdrop-blur-md">
                 <span className="ring h-2.5 w-2.5 rounded-full bg-emerald-400" />
                 Nurses available now across India, 24/7
               </div>
 
-              {/* Heading: white first line, soft cream-to-mint gradient on the second line */}
               <h1 className="mt-6 text-4xl sm:text-5xl xl:text-6xl font-black leading-[1.1] tracking-tight">
-                <span className="block text-white">Hospital-grade care,</span>
-                <span className="block bg-gradient-to-r from-emerald-50 via-emerald-200 to-teal-200 bg-clip-text text-transparent">
+                <span className="text-white">Hospital-grade care,</span>
+                <span className="block bg-gradient-to-r from-emerald-300 to-teal-200 bg-clip-text text-transparent">
                   in the comfort of home.
                 </span>
               </h1>
 
-              <p className="mt-6 text-lg text-slate-200 max-w-xl leading-relaxed">
+              <p className="mt-6 max-w-xl text-lg text-slate-200 leading-relaxed">
                 Sowik Home Health Care sends{' '}
                 <span className="font-semibold text-emerald-300">certified GNM/B.Sc nurses</span>,{' '}
                 <span className="font-semibold text-white">senior caregivers</span>,{' '}
@@ -250,22 +253,22 @@ export default function Home() {
                 </button>
                 <a
                   href={PHONE_TEL}
-                  className="rounded-full border border-white/50 bg-white/5 px-7 py-4 font-bold backdrop-blur-md hover:bg-white/15 transition flex items-center gap-2"
+                  className="rounded-full border border-white/50 bg-white/5 px-7 py-4 font-bold hover:bg-white/15 transition flex items-center gap-2"
                 >
                   <Phone size={18} /> {PHONE}
                 </a>
               </div>
 
-              <div className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
-                {[['1,000+', 'Happy families'], ['100%', 'Verified nurses'], ['2–12h', 'Deployment']].map(([v, l]) => (
-                  <div key={l} className="border-l-2 border-emerald-400 pl-4">
+              <div className="mt-9 flex flex-wrap gap-x-10 gap-y-4">
+                {[['1,000+', 'Happy families', 'border-emerald-400'], ['100%', 'Verified nurses', 'border-emerald-400'], ['2–12h', 'Deployment', 'border-emerald-400']].map(([v, l, c]) => (
+                  <div key={l} className={`border-l-2 pl-4 ${c}`}>
                     <p className="text-3xl font-black">{v}</p>
-                    <p className="text-xs text-slate-300 font-medium">{l}</p>
+                    <p className="text-xs font-medium text-slate-300">{l}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-2">
+              <div className="mt-7 flex flex-wrap gap-2">
                 {quick.map(([title, , link]) => (
                   <Link
                     key={title}
@@ -277,22 +280,74 @@ export default function Home() {
                 ))}
               </div>
             </Reveal>
+
+            {/* Wide photo: 4:3 so the whole picture shows */}
+            <Reveal delay={150} className="lg:col-span-6">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/20">
+                <HeroSlides />
+                <div className="absolute left-4 top-4 flex items-center gap-2.5 rounded-2xl bg-white/95 px-4 py-2.5 text-slate-900 shadow-lg">
+                  <ShieldCheck size={20} className="text-emerald-600" />
+                  <span className="text-sm font-extrabold">100% police verified</span>
+                </div>
+              </div>
+            </Reveal>
           </div>
 
-          {/* Clear, un-blurred photo */}
-          <div className="relative">
-            <Reveal delay={150}>
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-2xl ring-1 ring-white/20">
-                <HeroSlides />
+          {/* Information cards */}
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            <Reveal>
+              <div className="h-full rounded-3xl border border-white/15 bg-white/10 p-6 backdrop-blur-md">
+                <h2 className="flex items-center gap-2 text-xl font-extrabold text-emerald-300">
+                  <HeartPulse size={22} /> Our Care Promise
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-slate-200">
+                  Sowik Home Health Care brings hospital-quality nursing to your home. Our verified nurses,
+                  caregivers, baby care specialists and physiotherapists follow a personal care plan,
+                  supervised by qualified clinical leads, so your loved ones can recover comfortably with
+                  family around them.
+                </p>
               </div>
-              <div className="floaty absolute -bottom-6 left-4 sm:left-8 flex items-center gap-3 rounded-2xl bg-white px-5 py-3.5 text-slate-900 shadow-2xl">
-                <span className="grid h-11 w-11 place-items-center rounded-xl bg-emerald-500 text-white">
-                  <ShieldCheck size={22} />
-                </span>
-                <div className="leading-tight">
-                  <p className="font-extrabold text-sm">100% police verified</p>
-                  <p className="text-xs text-slate-500">Nurses and caregivers</p>
-                </div>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <div className="h-full rounded-3xl border border-white/15 bg-white/10 p-6 backdrop-blur-md">
+                <h3 className="border-b border-white/10 pb-3 text-sm font-extrabold uppercase tracking-wider text-emerald-300">Key benefits</h3>
+                <ul className="mt-4 space-y-3 text-sm text-slate-200">
+                  {[
+                    ['Verified staff:', 'police-verified and background-checked.'],
+                    ['Fast deployment:', 'caregivers reach you in 2–12 hours.'],
+                    ['Doctor supervision:', 'regular visits and tele-consultation.'],
+                    ['Free replacement:', 'a new caregiver if you are not satisfied.']
+                  ].map(([b, t]) => (
+                    <li key={b} className="flex items-start gap-2.5">
+                      <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-400" />
+                      <span><strong className="text-white">{b}</strong> {t}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+
+            <Reveal delay={200}>
+              <div className="h-full rounded-3xl border border-white/15 bg-white/10 p-6 backdrop-blur-md">
+                <h3 className="border-b border-white/10 pb-3 text-sm font-extrabold uppercase tracking-wider text-emerald-300">What we care for</h3>
+                <ul className="mt-4 space-y-3 text-sm">
+                  {[
+                    ['Elderly & senior care', '/services/elderly-care'],
+                    ['Post-surgery recovery', '/services/post-surgery'],
+                    ['Bedridden patient care', '/services/bedridden-care'],
+                    ['Dementia & Alzheimer’s care', '/services/dementia-alzheimers-care'],
+                    ['Physiotherapy at home', '/services/physiotherapy'],
+                    ['Newborn & mother care', '/services/newborn-baby-mother-care']
+                  ].map(([label, to]) => (
+                    <li key={to}>
+                      <Link to={to} className="flex items-start gap-2.5 text-slate-200 transition hover:text-emerald-300">
+                        <ShieldCheck size={18} className="mt-0.5 shrink-0 text-emerald-400" />
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </Reveal>
           </div>
@@ -314,7 +369,16 @@ export default function Home() {
       </section>
 
       {/* Services */}
-      <section className="max-w-7xl mx-auto px-4 py-14">
+      <section className="relative overflow-hidden">
+        {/* Background photo: put your own file at public/services-bg.jpg */}
+        <Photo
+          src="/services-bg.jpg"
+          fallback={U('1584515933487-779824d29309')}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-white/80" />
+        <div className="relative max-w-7xl mx-auto px-4 py-14">
         <Heading
           badge="Our Services"
           title="Complete home healthcare, one call away"
@@ -349,6 +413,7 @@ export default function Home() {
           <Link to="/services" className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-8 py-4 font-bold text-white hover:bg-primary-600 transition shadow-lg">
             View all services <ArrowRight size={18} />
           </Link>
+        </div>
         </div>
       </section>
 
@@ -434,18 +499,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Process: each step sits in a white box so the text is easy to read over the photo */}
+      {/* Process */}
       <section data-bg="1" className="max-w-7xl mx-auto px-4 py-14">
         <Heading badge="Simple Process" title="Care in 4 easy steps" />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="hidden lg:block absolute top-7 left-[12%] right-[12%] border-t-2 border-dashed border-primary-200" />
           {steps.map(([title, text], i) => (
             <Reveal key={title} delay={i * 80}>
-              <div className="h-full rounded-3xl bg-white p-7 text-center shadow-lg border border-slate-100 hover:-translate-y-1 hover:shadow-2xl transition">
-                <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-primary-600 bg-gradient-to-br from-primary-600 to-care-500 text-lg font-black text-white shadow-lg ring-8 ring-primary-50">
+              <div className="relative text-center">
+                <span className="relative mx-auto grid h-14 w-14 place-items-center rounded-full bg-primary-600 bg-gradient-to-br from-primary-600 to-care-500 text-lg font-black text-white shadow-lg ring-8 ring-white">
                   {i + 1}
                 </span>
                 <h3 className="mt-5 font-extrabold text-slate-900">{title}</h3>
-                <p className="mt-2 text-sm text-slate-600 leading-relaxed">{text}</p>
+                <p className="mt-2 text-sm text-slate-500 leading-relaxed">{text}</p>
               </div>
             </Reveal>
           ))}
@@ -612,6 +678,28 @@ export default function Home() {
                   className="rounded-full border-2 border-white/70 px-8 py-4 font-bold hover:bg-white/10 transition flex items-center gap-2"
                 >
                   <MessageCircle size={18} /> WhatsApp us
+                </a>
+              </div>
+
+              <div className="mt-8 flex items-center justify-center gap-3 text-sm font-semibold">
+                <span className="text-white/80">Follow us</span>
+                <a
+                  href={INSTAGRAM}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Sowik Home Health Care on Instagram"
+                  className="grid h-10 w-10 place-items-center rounded-full bg-white/15 transition hover:bg-pink-500"
+                >
+                  <Instagram size={18} />
+                </a>
+                <a
+                  href={FACEBOOK}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Sowik Home Health Care on Facebook"
+                  className="grid h-10 w-10 place-items-center rounded-full bg-white/15 transition hover:bg-blue-600"
+                >
+                  <Facebook size={18} />
                 </a>
               </div>
             </div>
