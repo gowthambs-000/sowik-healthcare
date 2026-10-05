@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import {
   ShieldCheck, Clock, Stethoscope, UserCheck, Phone, MessageCircle,
-  ArrowRight, CheckCircle2, Star, AlertTriangle, HeartPulse, Quote, Instagram, Facebook
+  ArrowRight, CheckCircle2, Star, AlertTriangle, HeartPulse, Quote, Instagram, Facebook,
+  Sparkles, Activity, Droplets, Layers, Gauge, Zap
 } from 'lucide-react';
 import {
   SERVICES, PACKAGES, NURSES, TESTIMONIALS, FAQS, PHONE, PHONE_TEL, WHATSAPP
@@ -414,6 +415,150 @@ export default function Home() {
             View all services <ArrowRight size={18} />
           </Link>
         </div>
+        </div>
+      </section>
+
+      {/* Featured service: NPWT / Vacuum Dressing */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-white to-emerald-50 py-16">
+        <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-sky-200/50 blur-3xl" />
+        <div className="absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-emerald-200/50 blur-3xl" />
+
+        <div className="relative max-w-7xl mx-auto px-4">
+          <div className="grid items-center gap-12 lg:grid-cols-12">
+
+            {/* LEFT: content */}
+            <div className="lg:col-span-7">
+              <Reveal>
+                <span className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
+                  <Activity size={14} className="text-emerald-400" /> Advanced specialised service
+                </span>
+                <h2 className="mt-5 text-3xl sm:text-4xl xl:text-5xl font-black leading-tight tracking-tight text-slate-900">
+                  Advanced{' '}
+                  <span className="bg-gradient-to-r from-sky-600 to-emerald-500 bg-clip-text text-transparent">
+                    Negative Pressure Wound Therapy (NPWT)
+                  </span>{' '}
+                  / Vacuum Dressing at home
+                </h2>
+                <p className="mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600">
+                  Our specialized nurses provide advanced Negative Pressure Wound Therapy (NPWT) / Vacuum
+                  Dressing at home using controlled suction devices to promote faster healing, lower
+                  infection risks, and ensure safe, comfortable recovery.
+                </p>
+              </Reveal>
+
+              {/* Key benefits */}
+              <Reveal delay={80}>
+                <p className="mt-9 flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-sky-700">
+                  <Sparkles size={18} className="text-amber-500" /> Key benefits
+                </p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  {[
+                    [Zap, 'Faster wound healing', 'Gentle negative pressure draws wound edges together and aids tissue growth.'],
+                    [Droplets, 'Continuous fluid removal', 'Drains excess exudates and harmful bacteria automatically.'],
+                    [Layers, 'Fewer dressing changes', 'Sealed vacuum system keeps the wound sterile for longer durations.'],
+                    [HeartPulse, 'Improved blood flow', 'Boosts oxygen and vital nutrient delivery directly to the wound site.']
+                  ].map(([Icon, b, t]) => (
+                    <div key={b} className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-sky-500 to-emerald-500 text-white shadow">
+                        <Icon size={20} />
+                      </span>
+                      <div>
+                        <p className="font-extrabold text-slate-900">{b}</p>
+                        <p className="mt-1 text-sm leading-relaxed text-slate-600">{t}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+
+              {/* What we treat */}
+              <Reveal delay={120}>
+                <p className="mt-9 flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-sky-700">
+                  <Stethoscope size={18} /> What we treat
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2.5">
+                  {[
+                    'Diabetic foot ulcers & non-healing wounds',
+                    'Pressure sores (bedsores) & deep ulcers',
+                    'Complex post-operative & surgical wounds',
+                    'Traumatic injuries & skin graft sites',
+                    'Chronic slow-healing open wounds'
+                  ].map((t) => (
+                    <span key={t} className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
+                      <ShieldCheck size={16} className="shrink-0 text-emerald-600" /> {t}
+                    </span>
+                  ))}
+                </div>
+              </Reveal>
+
+              {/* Care options */}
+              <Reveal delay={160}>
+                <p className="mt-9 text-sm font-extrabold uppercase tracking-wider text-sky-700">Our care options</p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  {[
+                    [Stethoscope, 'Home nursing visits'],
+                    [Gauge, 'Daily or alternate-day vacuum monitoring'],
+                    [Phone, 'Doctor tele-consultation']
+                  ].map(([Icon, t]) => (
+                    <div key={t} className="flex items-center gap-3 rounded-2xl bg-slate-900 px-4 py-3.5 text-white">
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-emerald-500">
+                        <Icon size={16} />
+                      </span>
+                      <span className="text-sm font-semibold leading-snug">{t}</span>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+
+              {/* Buttons */}
+              <Reveal delay={200}>
+                <div className="mt-9 flex flex-wrap gap-4">
+                  <a
+                    href={WHATSAPP}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-7 py-3.5 font-bold text-white shadow-lg shadow-emerald-600/30 transition hover:-translate-y-0.5 hover:bg-emerald-500"
+                  >
+                    <MessageCircle size={18} /> WhatsApp us ({PHONE})
+                  </a>
+                  <Link
+                    to="/services/post-surgery"
+                    className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-7 py-3.5 font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-sky-700"
+                  >
+                    View full service page <ArrowRight size={18} />
+                  </Link>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* RIGHT: machine photo */}
+            <Reveal delay={150} className="lg:col-span-5">
+              <div className="relative mx-auto max-w-md lg:max-w-none">
+                <div className="absolute -inset-3 rounded-[2.5rem] bg-gradient-to-br from-sky-400 to-emerald-400 opacity-30 blur-xl" />
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-white shadow-2xl ring-1 ring-slate-200">
+                  <Photo
+                    src="/npwt-vacuum.jpg"
+                    fallback={FALLBACK.family}
+                    alt="Nurse using a vacuum NPWT wound therapy machine at home"
+                    className="h-full w-full object-cover object-center"
+                  />
+                  <div className="absolute left-4 top-4 flex items-center gap-2 rounded-2xl bg-white/95 px-4 py-2 text-slate-900 shadow-lg">
+                    <Activity size={18} className="text-emerald-600" />
+                    <span className="text-sm font-extrabold">NPWT at home</span>
+                  </div>
+                  <div className="absolute inset-x-4 bottom-4 rounded-2xl bg-white p-4 text-slate-900 shadow-xl">
+                    <p className="flex items-center gap-2 font-extrabold">
+                      <Stethoscope size={18} className="text-emerald-600" /> Specialized vacuum-care nurses
+                    </p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      Controlled suction therapy managed safely in your own room.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+          </div>
         </div>
       </section>
 
