@@ -427,7 +427,7 @@ export default function Home() {
           <div className="grid items-center gap-12 lg:grid-cols-12">
 
             {/* LEFT: content */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-6">
               <Reveal>
                 <span className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
                   <Activity size={14} className="text-emerald-400" /> Advanced specialised service
@@ -531,22 +531,24 @@ export default function Home() {
               </Reveal>
             </div>
 
-            {/* RIGHT: machine photo */}
-            <Reveal delay={150} className="lg:col-span-5">
-              <div className="relative mx-auto max-w-md lg:max-w-none">
+            {/* RIGHT: machine photo (full picture, never cropped) */}
+            <Reveal delay={150} className="lg:col-span-6 lg:sticky lg:top-28">
+              <div className="relative">
                 <div className="absolute -inset-3 rounded-[2.5rem] bg-gradient-to-br from-sky-400 to-emerald-400 opacity-30 blur-xl" />
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-white shadow-2xl ring-1 ring-slate-200">
-                  <Photo
-                    src="/npwt-vacuum.jpg"
-                    fallback={FALLBACK.family}
-                    alt="Nurse using a vacuum NPWT wound therapy machine at home"
-                    className="h-full w-full object-cover object-center"
-                  />
-                  <div className="absolute left-4 top-4 flex items-center gap-2 rounded-2xl bg-white/95 px-4 py-2 text-slate-900 shadow-lg">
-                    <Activity size={18} className="text-emerald-600" />
-                    <span className="text-sm font-extrabold">NPWT at home</span>
+                <div className="relative overflow-hidden rounded-[2rem] bg-white shadow-2xl ring-1 ring-slate-200">
+                  <div className="relative aspect-[16/9] w-full bg-slate-100">
+                    <Photo
+                      src="/npwt-vacuum.jpg"
+                      fallback={FALLBACK.family}
+                      alt="Patient with NPWT vacuum wound therapy machine at home"
+                      className="h-full w-full object-contain object-center"
+                    />
+                    <div className="absolute left-3 top-3 flex items-center gap-2 rounded-xl bg-white/95 px-3 py-1.5 text-slate-900 shadow-lg">
+                      <Activity size={16} className="text-emerald-600" />
+                      <span className="text-xs font-extrabold sm:text-sm">NPWT at home</span>
+                    </div>
                   </div>
-                  <div className="absolute inset-x-4 bottom-4 rounded-2xl bg-white p-4 text-slate-900 shadow-xl">
+                  <div className="border-t border-slate-100 bg-white p-4 text-slate-900">
                     <p className="flex items-center gap-2 font-extrabold">
                       <Stethoscope size={18} className="text-emerald-600" /> Specialized vacuum-care nurses
                     </p>
