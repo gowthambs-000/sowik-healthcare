@@ -50,6 +50,16 @@ export const SERVICES = [
     inclusions: ['GNM/B.Sc nurses', 'Tracheostomy & catheter care', 'Ventilator management', 'Emergency response & stabilization'],
     duration: '24-hour live-in'
   },
+    {
+    name: 'Advanced Wound Care (NPWT / Vacuum Dressing)',
+    slug: 'npwt-vacuum-dressing',
+    category: 'Nursing Services',
+    shortDescription: 'Advanced Negative Pressure Wound Therapy (NPWT) / vacuum dressing at home to promote faster healing and lower infection risk.',
+    description: 'Our specialized nurses provide advanced Negative Pressure Wound Therapy (NPWT) / Vacuum Dressing at home using controlled suction devices to promote faster healing, lower infection risks, and ensure safe, comfortable recovery.',
+    inclusions: ['Vacuum dressing set-up and monitoring', 'Continuous fluid removal from the wound', 'Daily or alternate-day nursing visits', 'Doctor tele-consultation'],
+    duration: 'Daily or alternate-day visits',
+    image: '/npwt-vacuum.jpeg'
+  },
   {
     name: 'Wound Care & Dressing',
     slug: 'wound-care',
