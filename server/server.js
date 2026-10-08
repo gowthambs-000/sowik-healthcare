@@ -17,7 +17,18 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(helmet());
-app.use(cors());
+const allowedOrigins = [
+  'https://sowik.in',
+  'https://sowik.netlify.app',
+  'http://localhost:3000'
+];
+app.use(cors({
+  origin(origin, callback) {
+    // Permit server-to-server and local tools that do not send an Origin header.
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Origin not allowed by CORS'));
+  }
+}));
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -28,7 +39,7 @@ const limiter = rateLimit({
   max: 500,
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => req.path === '/health',
+  skip: (req) => req.path === '/health' || req.path === '/api/health',
   message: { message: 'Too many requests. Please wait a few minutes and try again.' }
 });
 app.use('/api/', limiter);
@@ -40,6 +51,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api', publicRoutes);
 app.use('/api/referrals', referralRoutes);
 
+app.get('/health', (req, res) => res.json({ status: 'OK', service: 'Sowik Home Health Care API' }));
 app.get('/api/health', (req, res) => res.json({ status: 'OK', service: 'Sowik Home Health Care API' }));
 
 app.use((err, req, res, next) => {
